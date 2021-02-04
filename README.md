@@ -64,6 +64,8 @@ Try to create optimal mongo schema + protobuf schemas
 
 ## External system
 
+**Important** - external system your not control from code, status can be changed any time (you dont know when). So you can create different assumption for caching.
+
 `ExternalStatus` - it is status from external system. Status processed on flight. 
 
 Mock for it:
