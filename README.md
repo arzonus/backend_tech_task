@@ -62,6 +62,10 @@ Additional:
 
 Try to create optimal mongo schema + protobuf schemas
 
+## Non-techincal
+
+1. Provide pull request when work done
+
 ## External system
 
 **Important** - external system your not control from code, status can be changed any time (you dont know when). So you can create different assumption for caching.
