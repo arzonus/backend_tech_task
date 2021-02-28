@@ -77,3 +77,19 @@ Mock for it:
 // http://localhost:4200/status/60119e16a4e9e747878c8887 - get status
 external.GetEngine().Run(":4200")
 ```
+
+## Usage
+You can run docker-compose with `external` app and `api` app via
+```bash
+    make run-local-env
+```
+
+## Development
+You can run these commands for development:
+```bash
+    make lint           # linting
+    make build-api      # building api app
+    make test           # run unit testing
+    make generate-grpc  # generage go sdk from proto source (you need protoc and github.com/envoyproxy/protoc-gen-validate)
+    make rerun-dev-env  # stop and run docker compose with mongo and external
+```

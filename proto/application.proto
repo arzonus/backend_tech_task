@@ -1,0 +1,75 @@
+// Application Proto API
+// Proto code style should follow
+// https://developers.google.com/protocol-buffers/docs/style
+syntax = "proto3";
+package api;
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+service ApplicationService {
+    rpc CreateApplication (CreateApplicationRequest) returns (Application);
+    rpc GetApplicationById (GetApplicationByIdRequest) returns (Application);
+    rpc GetApplicationsByFilters (GetApplicationsByFiltersRequest) returns (GetApplicationsByFiltersResponse);
+    rpc UpdateApplication (UpdateApplicationRequest) returns (Application);
+}
+
+message GetApplicationByIdRequestRequest {
+    string id = 1;
+}
+
+message GetApplicationsByFiltersRequest {
+    Application.Status status = 1;
+    TimeRange created_at_timerange = 2;
+    TimeRange updated_at_timerange = 3;
+    string user_id = 4;
+}
+
+message TimeRange {
+    google.protobuf.Timestamp start = 1;
+    google.protobuf.Timestamp end = 2;
+}
+
+message GetApplicationsByFiltersResponse {
+    repeated Application applications = 1;
+}
+
+message UpdateApplicationRequest {
+    string id = 1;
+    Application.Status status = 2 [(validate.rules).enum = {not_in: [0]}];
+}
+
+message CreateApplicationRequest {
+    string user_id = 1;
+}
+
+message GetApplicationByIdRequest {
+    string id = 1;
+}
+
+message Application {
+    string id = 1;
+    Status status = 2 [(validate.rules).enum = {not_in: [0]}];
+    string user_id = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+    ExternalStatus external_status = 6 [(validate.rules).enum = {not_in: [0]}];
+
+
+    enum Status {
+        // application doesn't have this status
+        // any application with this status - is not correct
+        APPLICATION_STATUS_UNSPECIFIED = 0;
+        APPLICATION_STATUS_OPEN = 1;
+        APPLICATION_STATUS_IN_PROGRESS = 2;
+        APPLICATION_STATUS_CLOSED = 3;
+    }
+
+    enum ExternalStatus {
+        // application doesn't have this status
+        // any application with this status - is not correct
+        APPLICATION_EXTERNAL_STATUS_UNSPECIFIED = 0;
+        APPLICATION_EXTERNAL_STATUS_PROCESSED = 1;
+        APPLICATION_EXTERNAL_STATUS_SKIPPED = 2;
+    }
+}

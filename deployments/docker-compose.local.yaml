@@ -1,0 +1,20 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: build/api/Dockerfile
+    container_name: backend_tech_task_api
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    networks:
+      - backend_tech_task_net
+    environment:
+      GRPC_ADDRESS: ":8080"
+      EXTERNAL_URL: "http://external:4200"
+      MONGO_URL: "mongodb://mongo:27017"
+      MONGO_DATABASE: "tech_task"
+      MONGO_USER: root
+      MONGO_PASSWORD: root_password

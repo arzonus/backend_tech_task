@@ -1,0 +1,30 @@
+version: '3'
+services:
+  mongo:
+    image: "mongo:bionic"
+    container_name: backend_tech_task_mongodb
+    ports:
+      - "27017:27017"
+    expose:
+      - 27017
+    networks:
+      - backend_tech_task_net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root_password
+
+  external:
+    build:
+      context: ..
+      dockerfile: build/external/Dockerfile
+    container_name: backend_tech_task_external
+    ports:
+      - "4200:4200"
+    expose:
+      - 4200
+    networks:
+      - backend_tech_task_net
+
+networks:
+  backend_tech_task_net:
+    driver: bridge
