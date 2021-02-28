@@ -146,7 +146,7 @@ func (r Repository) Update(ctx context.Context, params *application.UpdateParams
 		bson.D{
 			bson.E{Key: "_id", Value: mID}},
 		bson.D{
-			{"$set", bson.D{
+			{Key: "$set", Value: bson.D{
 				bson.E{Key: "status", Value: params.Status},
 				bson.E{Key: "updated_at", Value: NewDateTime(time.Now().UTC())},
 			}},
