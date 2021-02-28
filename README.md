@@ -17,7 +17,7 @@ We have applications from customers in next format (one user can have multiple a
 }
 ```
 
-You need create backend system whicmah will be next requests:
+You need create backend system which will be next requests:
 
 ```proto
 

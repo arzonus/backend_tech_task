@@ -9,6 +9,7 @@ import (
 	"golang.org/x/sync/singleflight"
 )
 
+//go:generate mockgen -destination=mock/repository.go -package=application_mock "github.com/PxyUp/backend_tech_task/internal/application" Repository
 type Repository interface {
 	Create(ctx context.Context, application *Application) error
 	FindByID(ctx context.Context, id string) (*Application, error)

@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+//go:generate mockgen -destination=mock/client.go -package=external_mock "github.com/PxyUp/backend_tech_task/internal/external" Client
 type Client interface {
 	GetExternalStatus(ctx context.Context, id string) (Status, error)
 }
