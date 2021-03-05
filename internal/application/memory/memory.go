@@ -140,12 +140,12 @@ func (r *Repository) FindByFilters(
 		)
 
 		merge := func() func(key, value string) bool {
-			// if it's first filter search, save apps to results
 
+			// if it's first filter search, save apps to results
 			if results == nil {
 				results = make(map[string]string)
 				return func(key, value string) bool {
-					results[key] = value
+					tmp[key] = value
 					return true
 				}
 			}
@@ -198,6 +198,7 @@ func (r *Repository) FindByFilters(
 			); err != nil {
 				return err
 			}
+			swap()
 		}
 
 		if filter.UpdatedAt != nil {
@@ -268,6 +269,7 @@ func (r *Repository) SetMultiple(apps ...application.Application) error {
 
 type ApplicationModel struct {
 	application.Application
+	Status    int32
 	CreatedAt int64
 	UpdatedAt int64
 }
@@ -275,6 +277,7 @@ type ApplicationModel struct {
 func (m ApplicationModel) Parse() *application.Application {
 	m.Application.CreatedAt = time.Unix(m.CreatedAt, 0)
 	m.Application.UpdatedAt = time.Unix(m.UpdatedAt, 0)
+	m.Application.Status = application.NewStatus(m.Status)
 	return &m.Application
 }
 
@@ -289,6 +292,7 @@ func (m ApplicationModel) Value() (string, error) {
 func NewApplicationModel(app *application.Application) *ApplicationModel {
 	return &ApplicationModel{
 		Application: *app,
+		Status:      app.Status.Int32(),
 		CreatedAt:   app.CreatedAt.Unix(),
 		UpdatedAt:   app.UpdatedAt.Unix(),
 	}
