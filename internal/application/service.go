@@ -157,7 +157,7 @@ func (svc service) GetByFilters(ctx context.Context, params *GetByFilterParams) 
 		return nil, ErrRepository
 	}
 
-	log.Err(err).Msgf("applications has been found")
+	log.Info().Msgf("applications has been found")
 	return apps, nil
 }
 

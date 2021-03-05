@@ -69,6 +69,40 @@ func (r Repository) FindByID(ctx context.Context, id string) (*application.Appli
 	return ParseApplicationModel(m)
 }
 
+func (r Repository) FindAll(ctx context.Context) ([]application.Application, error) {
+	cur, err := r.coll.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := cur.Close(ctx); err != nil {
+			log.Err(err).Msg("couldn't close cursor after find all applications")
+		}
+	}()
+
+	var apps []application.Application
+	for cur.Next(ctx) {
+		var m ApplicationModel
+		err := cur.Decode(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		app, err := ParseApplicationModel(&m)
+		if err != nil {
+			return nil, err
+		}
+
+		apps = append(apps, *app)
+	}
+
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return apps, nil
+}
+
 func (r Repository) FindByFilters(ctx context.Context, params *application.GetByFilterParams) ([]application.Application, error) {
 	var filter bson.D
 	if params.Status != nil {
@@ -211,8 +245,8 @@ func NewApplicationModel(app *application.Application) (*ApplicationModel, error
 func ParseApplicationModel(m *ApplicationModel) (*application.Application, error) {
 	var (
 		a = &application.Application{
-			ID:        m.ID.String(),
-			UserID:    m.UserID.String(),
+			ID:        m.ID.Hex(),
+			UserID:    m.UserID.Hex(),
 			CreatedAt: ParseDateTime(m.CreatedAt),
 			UpdatedAt: ParseDateTime(m.UpdatedAt),
 		}

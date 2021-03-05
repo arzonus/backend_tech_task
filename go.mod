@@ -10,9 +10,9 @@ require (
 	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.4.2
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/rs/zerolog v1.20.0
 	github.com/stretchr/testify v1.6.1
+	github.com/tidwall/buntdb v1.2.0
 	go.mongodb.org/mongo-driver v1.4.5
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.36.0

@@ -3,17 +3,16 @@ package app
 import (
 	"context"
 
-	"github.com/rs/zerolog/log"
-
-	application_mongo "github.com/PxyUp/backend_tech_task/internal/application/mongo"
-	"github.com/PxyUp/backend_tech_task/internal/util/mongoutil"
-
 	"github.com/PxyUp/backend_tech_task/internal/api/grpc"
 	"github.com/PxyUp/backend_tech_task/internal/api/grpc/services"
 	"github.com/PxyUp/backend_tech_task/internal/application"
+	application_memory "github.com/PxyUp/backend_tech_task/internal/application/memory"
+	application_mongo "github.com/PxyUp/backend_tech_task/internal/application/mongo"
 	"github.com/PxyUp/backend_tech_task/internal/external"
+	"github.com/PxyUp/backend_tech_task/internal/util/mongoutil"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/rs/zerolog/log"
 )
 
 type App struct {
@@ -38,12 +37,13 @@ func NewApp() (*App, error) {
 		return nil, err
 	}
 
+	var applicationMongoRepository = application_mongo.NewRepository(mongoDB)
+	applicationRepository, err := application_memory.NewRepository(applicationMongoRepository)
+	if err != nil {
+		return nil, err
+	}
+
 	var (
-		applicationMongoRepository = application_mongo.NewRepository(mongoDB)
-		applicationRepository      = application.NewRepository(
-			cfg.Cache,
-			applicationMongoRepository,
-		)
 		applicationService = application.NewService(
 			applicationRepository,
 			externalClient,
@@ -63,10 +63,9 @@ func (app App) Run(ctx context.Context) error {
 }
 
 type Config struct {
-	GRPC     grpc.Config        `envconfig:"grpc"`
-	Mongo    mongoutil.Config   `envconfig:"mongo"`
-	External external.Config    `envconfig:"external"`
-	Cache    application.Config `envconfig:"cache"`
+	GRPC     grpc.Config      `envconfig:"grpc"`
+	Mongo    mongoutil.Config `envconfig:"mongo"`
+	External external.Config  `envconfig:"external"`
 }
 
 func NewConfig() (*Config, error) {
